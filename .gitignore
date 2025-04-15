@@ -1,0 +1,14 @@
+# Build Results
+Server/bin
+Server/obj
+Server/out
+
+# ASP.NET Core secrets
+Server/appsettings.Development.json
+
+# Entity Framework
+Server/Migrations/*.Designer.cs
+Server/Migrations/*.csproj
+
+# dotnet watch
+Server/Properties/launchSettings.json
