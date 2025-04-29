@@ -7,7 +7,7 @@ namespace Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class BudgetController(IBudgetRepository repo, IBudgetFactory factory): ControllerBase
+public class BudgetController(IBudgetRepository repo, IBudgetFactory factory) : ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = repo;
 	private readonly IBudgetFactory _budgetFactory = factory;
@@ -42,7 +42,7 @@ public class BudgetController(IBudgetRepository repo, IBudgetFactory factory): C
 			{
 				Id = c.Id,
 				Name = c.Name,
-				Amount = c.Amount,
+				SpendingLimit = c.SpendingLimit,
 				Transactions = [.. c.Transactions.Select(t => new TransactionDTO
 				{
 					Id = t.Id,

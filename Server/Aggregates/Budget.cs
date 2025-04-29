@@ -33,6 +33,10 @@ public class Budget
 				ApplyAddedCategory(e);
 				break;
 
+			case UpdatedCategory e:
+				ApplyUpdatedCategory(e);
+				break;
+
 			default:
 				throw new Exception("Event type not supported");
 		}
@@ -47,18 +51,33 @@ public class Budget
 	
 	public void MarkChangesAsCommitted() => _events.Clear();
 
-	public void AddCategory(string name)
+	public void AddCategory(string name, decimal spendingLimit)
 	{
-		var categoryId = Guid.NewGuid();
 		var categoryAddedEvent = new AddedCategory
 		{
-			CategoryId = categoryId,
 			BudgetId = Id,
+			CategoryId = Guid.NewGuid(),
 			CategoryName = name,
+			SpendingLimit = spendingLimit,
 		};
 
-		AddEvent(categoryAddedEvent);
 		Apply(categoryAddedEvent);
+		AddEvent(categoryAddedEvent);
+	}
+
+	public void UpdateCategory(Guid categoryId, decimal spendingLimit, string name)
+	{
+
+		var UpdatedCategoryEvent = new UpdatedCategory
+		{
+			BudgetId = Id,
+			CategoryId = categoryId,
+			CategoryName = name,
+			SpendingLimit = spendingLimit,
+		};
+
+		Apply(UpdatedCategoryEvent);
+		AddEvent(UpdatedCategoryEvent);
 	}
 
     public void AddTransaction(decimal amount, string description, DateTime date, Guid categoryId)
@@ -71,8 +90,8 @@ public class Budget
 			CategoryId = categoryId,
 		};
 
-		AddEvent(transactionAddedEvent);
 		Apply(transactionAddedEvent);
+		AddEvent(transactionAddedEvent);
 	}
 
 	private void ApplyCreatedBudget(CreatedBudget @event)
@@ -88,8 +107,25 @@ public class Budget
 			{
 				Id = @event.CategoryId,
 				Name = @event.CategoryName,
+				SpendingLimit = @event.SpendingLimit,
 			}
 		);
+	}
+
+	private void ApplyUpdatedCategory (UpdatedCategory @event)
+	{
+		var category = _categories.Find(e => e.Id == @event.CategoryId) ?? throw new Exception("Category not found");
+
+		if (@event.CategoryName != "")
+		{
+			category.Name = @event.CategoryName;
+		}
+
+		if (@event.SpendingLimit != decimal.Zero)
+		{
+			category.SpendingLimit = @event.SpendingLimit;
+		}
+
 	}
 
 }
