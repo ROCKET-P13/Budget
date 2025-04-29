@@ -2,7 +2,7 @@ namespace Server.Models;
 
 public class Category
 {
-	public int Id { get; set; }
+	public Guid Id { get; set; }
 	public int BudgetId { get; set; }
 	public Budget? Budget { get; set; }
 	public string Name { get; set; } = string.Empty;

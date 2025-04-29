@@ -1,25 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
-using Server.Models;
+using Server.Factories.BudgetFactory.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 
+namespace Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class BudgetController(IBudgetRepository repo): ControllerBase
+
+public class BudgetController(IBudgetRepository repo, IBudgetFactory factory): ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = repo;
+	private readonly IBudgetFactory _budgetFactory = factory;
 
 	[HttpPost]
-	public async Task<IActionResult> Create(Budget budget)
+	public async Task<IActionResult> Create([FromBody] CreateBudgetRequest request)
 	{
-		var created = await _budgetRepository.Create(budget);
-		return Ok(created);
+		var budget = _budgetFactory.Create(request.Name);
+
+		await _budgetRepository.SaveAsync(budget);
+		return Ok(new
+		{
+			budget.Id,
+			budget.Name,
+		});
 	}
 
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetBudget(int id)
+	public async Task<IActionResult> GetBudget(Guid id)
 	{
-		var budget = await _budgetRepository.GetBudgetById(id);
+		var budget = await _budgetRepository.GetById(id);
 		if (budget == null)
 		{
 			return NotFound();
@@ -29,7 +38,6 @@ public class BudgetController(IBudgetRepository repo): ControllerBase
 		{
 			Id = budget.Id,
 			Name = budget.Name,
-			CreatedAt = budget.CreatedDate,
 			Categories = [.. budget.Categories.Select(c => new CategoryDTO
 			{
 				Id = c.Id,

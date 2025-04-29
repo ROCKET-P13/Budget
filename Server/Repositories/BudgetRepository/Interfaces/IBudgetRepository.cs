@@ -1,10 +1,8 @@
-using Server.Models;
+using Server.Aggregates;
 
-namespace Server.Repositories.BudgetRepository.Interfaces
+namespace Server.Repositories.BudgetRepository.Interfaces;
+public interface IBudgetRepository
 {
-	public interface IBudgetRepository
-	{
-		Task<Budget> Create(Budget budget);
-		Task<Budget?> GetBudgetById(int id);
-	}
+	Task<Budget> GetById(Guid id);
+	Task SaveAsync (Budget budget);
 }
