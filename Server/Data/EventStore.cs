@@ -32,7 +32,9 @@ public class EventStore: IEventStore
 								IgnoreUnrecognizedTypeDiscriminators = true,
 								DerivedTypes =
 								{
-									new JsonDerivedType(typeof(CreatedBudget), "CreatedBudget")
+									new JsonDerivedType(typeof(CreatedBudget), "CreatedBudget"),
+									new JsonDerivedType(typeof(AddedCategory), "AddedCategory"),
+									new JsonDerivedType(typeof(UpdatedCategory), "UpdatedCategory"),	
 								}
 							};
 						}
