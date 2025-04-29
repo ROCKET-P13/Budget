@@ -1,30 +1,28 @@
-using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.Models;
+using Server.Aggregates;
+using Server.Data.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 
-namespace Server.Repositories.BudgetRepository
+namespace Server.Repositories.BudgetRepository;
+
+public class BudgetRepository(IEventStore eventStore) : IBudgetRepository
 {
-	public class BudgetRepository(AppDatabaseContext context): IBudgetRepository
+	private readonly IEventStore _eventStore = eventStore;
+
+	public async Task<Budget> GetById(Guid budgetId)
 	{
-		private readonly AppDatabaseContext _context = context;
+		var events = await _eventStore.GetEventsAsync(budgetId);
+		if (events.Count == 0)
+			throw new InvalidOperationException("Budget not found");
+		
+		return new Budget(events);
 
-		public async Task<Budget> Create(Budget budget)
-		{
-			_context.Budgets.Add(budget);
-			await _context.SaveChangesAsync();
-			return budget;
-		}
+	}
 
-		public async Task<Budget?> GetBudgetById(int id)
-		{
-			var budget = await _context.Budgets
-				.Include(b => b.Categories)
-					.ThenInclude(c => c.Transactions)
-				.FirstOrDefaultAsync(b => b.Id == id);
-				
-			return budget;
-		}
+	public async Task SaveAsync (Budget budget)
+	{
+		var newEvents = budget.GetUncommittedChanges();
+		Console.WriteLine($"\n New Events: {newEvents}");
+		await _eventStore.SaveEventsAsync(budget.Id, newEvents);
+		budget.MarkChangesAsCommitted();
 	}
 }
-
