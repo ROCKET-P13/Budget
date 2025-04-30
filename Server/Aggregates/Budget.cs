@@ -10,7 +10,10 @@ public class Budget
 
 	private readonly List<EventEntity> _events = [];
 	private readonly List<Category> _categories = [];
+	private readonly List<Transaction> _transactions = [];
+
 	public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
+	public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
 
 	public Budget(IEnumerable<EventEntity> events)
 	{
@@ -35,6 +38,10 @@ public class Budget
 
 			case UpdatedCategory e:
 				ApplyUpdatedCategory(e);
+				break;
+
+			case AddedTransaction e:
+				ApplyAddedTransaction(e);
 				break;
 
 			default:
@@ -65,10 +72,29 @@ public class Budget
 		AddEvent(categoryAddedEvent);
 	}
 
+	public void AddTransaction(Guid? categoryId, string? merchant, decimal amount, string? date, string? description)
+	{
+		var transactionAddedEvent = new AddedTransaction
+		{
+			TransactionId = Guid.NewGuid(),
+			BudgetId = Id,
+			CategoryId = categoryId,
+			Amount = amount,
+			Date = date,
+			Description = description,
+			Merchant = merchant,
+		};
+
+		Apply(transactionAddedEvent);
+		AddEvent(transactionAddedEvent);
+	}
+
 	public void UpdateCategory(Guid categoryId, decimal spendingLimit, string name)
 	{
 
-		var UpdatedCategoryEvent = new UpdatedCategory
+		var category = _categories.Find(c => c.Id == categoryId) ?? throw new Exception("Category not found");
+
+        var UpdatedCategoryEvent = new UpdatedCategory
 		{
 			BudgetId = Id,
 			CategoryId = categoryId,
@@ -80,14 +106,17 @@ public class Budget
 		AddEvent(UpdatedCategoryEvent);
 	}
 
-    public void AddTransaction(decimal amount, string description, DateTime date, Guid categoryId)
+    public void AddTransaction(decimal amount, string description, string date, Guid categoryId, string merchant)
 	{
 		var transactionAddedEvent = new AddedTransaction
 		{
+			BudgetId = Id,
+			Merchant = merchant,
 			Amount = amount,
 			Description = description,
 			Date = date,
 			CategoryId = categoryId,
+			TransactionId = Guid.NewGuid()
 		};
 
 		Apply(transactionAddedEvent);
@@ -100,7 +129,7 @@ public class Budget
 		Id = @event.BudgetId;
 	}
 
-	private void ApplyAddedCategory (AddedCategory @event)
+	private void ApplyAddedCategory(AddedCategory @event)
 	{
 		_categories.Add(
 			new Category
@@ -112,9 +141,24 @@ public class Budget
 		);
 	}
 
-	private void ApplyUpdatedCategory (UpdatedCategory @event)
+	private void ApplyAddedTransaction(AddedTransaction @event)
 	{
-		var category = _categories.Find(e => e.Id == @event.CategoryId) ?? throw new Exception("Category not found");
+		_transactions.Add(
+			new Transaction
+			{
+				Id = @event.TransactionId,
+				Date = @event.Date,
+				Amount = @event.Amount,
+				Merchant = @event.Merchant,
+				CategoryId = @event.CategoryId,
+				Description = @event.Description,
+			}
+		);
+	}
+
+	private void ApplyUpdatedCategory(UpdatedCategory @event)
+	{
+		var category = _categories.Find(e => e.Id == @event.CategoryId);
 
 		if (@event.CategoryName != "")
 		{

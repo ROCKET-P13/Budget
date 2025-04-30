@@ -6,5 +6,5 @@ public class CategoryDTO
 	public string Name { get; set; } = string.Empty;
 	public decimal SpendingLimit { get; set; }
 
-	public ICollection<TransactionDTO> Transactions { get; set; } = [];
+	public List<TransactionDTO> Transactions { get; set; } = [];
 }

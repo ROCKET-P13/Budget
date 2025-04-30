@@ -24,19 +24,26 @@ public class CategoryController(IBudgetRepository repo) : ControllerBase
 		{
 			Id = budget.Id,
 			Name = budget.Name,
-			Categories = [.. budget.Categories.Select(c => new CategoryDTO
-			{
-				Id = c.Id,
-				Name = c.Name,
-				SpendingLimit = c.SpendingLimit,
-				Transactions = [.. c.Transactions.Select(t => new TransactionDTO
+			Categories = [
+				.. budget.Categories.Select(c => new CategoryDTO
 				{
-					Id = t.Id,
-					Merchant = t.Merchant,
-					Amount = t.Amount,
-					Date = t.Date,
-				})]
-			})]
+					Id = c.Id,
+					Name = c.Name,
+					SpendingLimit = c.SpendingLimit,
+					Transactions = [
+						.. budget.Transactions
+						.Where(t => t.CategoryId == c.Id)
+						.Select(t => new TransactionDTO
+						{
+							Id = t.Id,
+							Description = t.Description,
+							Merchant = t.Merchant,
+							Amount = t.Amount,
+							Date = t.Date
+						}).ToList()
+					]
+				}).ToList()
+			]
 		};
 
 		return Ok(budgetDTO);
@@ -50,23 +57,30 @@ public class CategoryController(IBudgetRepository repo) : ControllerBase
 
 		await _budgetRepository.SaveAsync(budget);
 
-				var budgetDTO = new BudgetDTO
+		var budgetDTO = new BudgetDTO
 		{
 			Id = budget.Id,
 			Name = budget.Name,
-			Categories = [.. budget.Categories.Select(c => new CategoryDTO
-			{
-				Id = c.Id,
-				Name = c.Name,
-				SpendingLimit = c.SpendingLimit,
-				Transactions = [.. c.Transactions.Select(t => new TransactionDTO
+			Categories = [
+				.. budget.Categories.Select(c => new CategoryDTO
 				{
-					Id = t.Id,
-					Merchant = t.Merchant,
-					Amount = t.Amount,
-					Date = t.Date,
-				})]
-			})]
+					Id = c.Id,
+					Name = c.Name,
+					SpendingLimit = c.SpendingLimit,
+					Transactions = [
+						.. budget.Transactions
+						.Where(t => t.CategoryId == c.Id)
+						.Select(t => new TransactionDTO
+						{
+							Id = t.Id,
+							Description = t.Description,
+							Merchant = t.Merchant,
+							Amount = t.Amount,
+							Date = t.Date
+						}).ToList()
+					]
+				}).ToList()
+			]
 		};
 
 		return Ok(budgetDTO);

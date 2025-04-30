@@ -1,40 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.DTOs.Requests;
-using Server.Factories.BudgetFactory.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 
 namespace Server.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 
-public class BudgetController(IBudgetRepository repo, IBudgetFactory factory) : ControllerBase
+public class TransactionController(IBudgetRepository repo) : ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = repo;
-	private readonly IBudgetFactory _budgetFactory = factory;
 
 	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] CreateBudgetRequest request)
+	public async Task<IActionResult> Create([FromBody] CreateTransactionRequest request)
 	{
-		var budget = _budgetFactory.Create(request.Name);
+		var budget = await _budgetRepository.GetById(request.BudgetId);
+
+		budget.AddTransaction(request.CategoryId, request.Merchant, request.Amount, request.Date, request.Description);
 
 		await _budgetRepository.SaveAsync(budget);
-		return Ok(new
-		{
-			budget.Id,
-			budget.Name,
-		});
-	}
 
-	[HttpGet("{id}")]
-	public async Task<IActionResult> GetBudget(Guid id)
-	{
-		var budget = await _budgetRepository.GetById(id);
-		if (budget == null)
-		{
-			return NotFound();
-		}
-
+		
 		var budgetDTO = new BudgetDTO
 		{
 			Id = budget.Id,
@@ -51,6 +38,7 @@ public class BudgetController(IBudgetRepository repo, IBudgetFactory factory) : 
 						.Select(t => new TransactionDTO
 						{
 							Id = t.Id,
+							CategoryId = t.CategoryId,
 							Description = t.Description,
 							Merchant = t.Merchant,
 							Amount = t.Amount,
@@ -60,7 +48,6 @@ public class BudgetController(IBudgetRepository repo, IBudgetFactory factory) : 
 				}).ToList()
 			]
 		};
-
 
 		return Ok(budgetDTO);
 	}
