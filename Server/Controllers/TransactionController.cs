@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.DTOs.Requests;
+using Server.Factories.BudgetViewModelFactory.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 
 namespace Server.Controllers;
@@ -8,9 +9,10 @@ namespace Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class TransactionController(IBudgetRepository repo) : ControllerBase
+public class TransactionController(IBudgetRepository budgetRepository, IBudgetViewModelFactory budgetViewModelFactory) : ControllerBase
 {
-	private readonly IBudgetRepository _budgetRepository = repo;
+	private readonly IBudgetRepository _budgetRepository = budgetRepository;
+	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
 
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateTransactionRequest request)
@@ -21,34 +23,15 @@ public class TransactionController(IBudgetRepository repo) : ControllerBase
 
 		await _budgetRepository.SaveAsync(budget);
 
-		
-		var budgetDTO = new BudgetDTO
-		{
-			Id = budget.Id,
-			Name = budget.Name,
-			Categories = [
-				.. budget.Categories.Select(c => new CategoryDTO
-				{
-					Id = c.Id,
-					Name = c.Name,
-					SpendingLimit = c.SpendingLimit,
-					Transactions = [
-						.. budget.Transactions
-						.Where(t => t.CategoryId == c.Id)
-						.Select(t => new TransactionDTO
-						{
-							Id = t.Id,
-							CategoryId = t.CategoryId,
-							Description = t.Description,
-							Merchant = t.Merchant,
-							Amount = t.Amount,
-							Date = t.Date
-						}).ToList()
-					]
-				}).ToList()
-			]
-		};
-
-		return Ok(budgetDTO);
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
 	}
+
+	[HttpPut]
+	public async Task<IActionResult> Update([FromBody] UpdateTransactionRequest request)
+	 {
+		var budget = await _budgetRepository.GetById(request.BudgetId);
+
+
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
+	 }
 }

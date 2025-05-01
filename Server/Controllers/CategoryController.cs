@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.DTOs.Requests;
+using Server.Factories.BudgetViewModelFactory.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 
 namespace Server.Controllers;
@@ -8,81 +9,31 @@ namespace Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class CategoryController(IBudgetRepository repo) : ControllerBase
+public class CategoryController(IBudgetRepository budgetRepository, IBudgetViewModelFactory budgetViewModelFactory) : ControllerBase
 {
-	private readonly IBudgetRepository _budgetRepository = repo;
+	private readonly IBudgetRepository _budgetRepository = budgetRepository;
+	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
 
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
 	{
 		var budget = await _budgetRepository.GetById(request.BudgetId);
-		budget.AddCategory(request.Name, request.SpendingLimit);
+		budget.AddCategory(request.Name, request.PlannedAmount);
 
 		await _budgetRepository.SaveAsync(budget);
 
-		var budgetDTO = new BudgetDTO
-		{
-			Id = budget.Id,
-			Name = budget.Name,
-			Categories = [
-				.. budget.Categories.Select(c => new CategoryDTO
-				{
-					Id = c.Id,
-					Name = c.Name,
-					SpendingLimit = c.SpendingLimit,
-					Transactions = [
-						.. budget.Transactions
-						.Where(t => t.CategoryId == c.Id)
-						.Select(t => new TransactionDTO
-						{
-							Id = t.Id,
-							Description = t.Description,
-							Merchant = t.Merchant,
-							Amount = t.Amount,
-							Date = t.Date
-						}).ToList()
-					]
-				}).ToList()
-			]
-		};
-
-		return Ok(budgetDTO);
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
 	}
 
-	[HttpPut]
+	[HttpPatch]
 	public async Task<IActionResult> Update ([FromBody] UpdateCategoryRequest request)
 	{
 		var budget = await _budgetRepository.GetById(request.BudgetId);
-		budget.UpdateCategory(request.CategoryId, request.SpendingLimit, request.Name);
+		budget.UpdateCategory(request.CategoryId, request.PlannedAmount, request.Name);
 
 		await _budgetRepository.SaveAsync(budget);
 
-		var budgetDTO = new BudgetDTO
-		{
-			Id = budget.Id,
-			Name = budget.Name,
-			Categories = [
-				.. budget.Categories.Select(c => new CategoryDTO
-				{
-					Id = c.Id,
-					Name = c.Name,
-					SpendingLimit = c.SpendingLimit,
-					Transactions = [
-						.. budget.Transactions
-						.Where(t => t.CategoryId == c.Id)
-						.Select(t => new TransactionDTO
-						{
-							Id = t.Id,
-							Description = t.Description,
-							Merchant = t.Merchant,
-							Amount = t.Amount,
-							Date = t.Date
-						}).ToList()
-					]
-				}).ToList()
-			]
-		};
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
 
-		return Ok(budgetDTO);
 	}
 }

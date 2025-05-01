@@ -1,12 +1,20 @@
+using Server.Events;
+
 namespace Server.Models;
 
-public class Category
+public class Category (AddedCategory @event)
 {
-	public Guid Id { get; set; }
-	public int BudgetId { get; set; }
-	public Budget? Budget { get; set; }
-	public string Name { get; set; } = string.Empty;
-	public decimal SpendingLimit { get; set; }
-	public IList<Transaction> Transactions { get; set; } = [];
+	public Guid Id { get; } = @event.CategoryId;
+	public string? Name { get; private set; } = @event.CategoryName;
+	public decimal PlannedAmount { get; private set; } = @event.PlannedAmount;
+	public bool? IsDebt { get; private set; } = @event.IsDebt;
 
+	public void UpdateFrom (UpdatedCategory @event)
+	{
+		if (!string.IsNullOrEmpty(@event.CategoryName))
+			Name = @event.CategoryName;
+
+		if (@event.PlannedAmount != decimal.Zero)
+			PlannedAmount = @event.PlannedAmount;
+	}
 }

@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Events;
+using Server.Models;
 
 namespace Server.Data;
 
 public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : DbContext(options)
 {
 	public DbSet<Event> Events { get; set; }
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Event>(entity =>
