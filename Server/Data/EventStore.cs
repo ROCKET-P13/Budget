@@ -35,6 +35,7 @@ public class EventStore: IEventStore
 									new JsonDerivedType(typeof(CreatedBudget), "CreatedBudget"),
 									new JsonDerivedType(typeof(AddedCategory), "AddedCategory"),
 									new JsonDerivedType(typeof(UpdatedCategory), "UpdatedCategory"),	
+									new JsonDerivedType(typeof(AddedTransaction), "AddedTransaction")
 								}
 							};
 						}
