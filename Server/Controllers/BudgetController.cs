@@ -8,7 +8,12 @@ namespace Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class BudgetController(IBudgetRepository budgetRepository, IBudgetFactory budgetFactory, IBudgetViewModelFactory budgetViewModelFactory) : ControllerBase
+public class BudgetController
+(
+	IBudgetRepository budgetRepository,
+	IBudgetFactory budgetFactory,
+	IBudgetViewModelFactory budgetViewModelFactory
+) : ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = budgetRepository;
 	private readonly IBudgetFactory _budgetFactory = budgetFactory;
@@ -28,7 +33,7 @@ public class BudgetController(IBudgetRepository budgetRepository, IBudgetFactory
 	}
 
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetBudget(Guid id)
+	public async Task<IActionResult> Get(Guid id)
 	{
 		var budget = await _budgetRepository.GetById(id);
 		if (budget == null)

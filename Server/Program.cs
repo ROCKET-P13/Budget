@@ -8,6 +8,10 @@ using Server.Factories.BudgetFactory;
 using System.Text.Json;
 using Server.Factories.BudgetViewModelFactory.Interfaces;
 using Server.Factories.BudgetViewModelFactory;
+using Server.Repositories.CategoryRepository.Interfaces;
+using Server.Repositories.CategoryRepository;
+using Server.Factories.CategoryFactory.Interfaces;
+using Server.Factories.CategoryFactory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +20,13 @@ builder.Services.AddDbContext<AppDatabaseContext>(options =>
 
 
 builder.Services.AddScoped<IEventStore, EventStore>();
+
 builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<IBudgetFactory, BudgetFactory>();
 builder.Services.AddScoped<IBudgetViewModelFactory, BudgetViewModelFactory>();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryFactory, CategoryFactory>();
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options => 

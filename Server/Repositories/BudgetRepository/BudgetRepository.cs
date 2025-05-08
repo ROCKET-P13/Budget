@@ -10,7 +10,7 @@ public class BudgetRepository(IEventStore eventStore) : IBudgetRepository
 
 	public async Task<Budget> GetById(Guid budgetId)
 	{
-		var events = await _eventStore.GetEventsAsync(budgetId);
+		var events = await _eventStore.GetBudgetEventsAsync(budgetId);
 		if (events.Count == 0)
 			throw new InvalidOperationException("Budget not found");
 		
@@ -18,11 +18,10 @@ public class BudgetRepository(IEventStore eventStore) : IBudgetRepository
 
 	}
 
-	public async Task SaveAsync (Budget budget)
+	public async Task SaveAsync(Budget budget)
 	{
 		var newEvents = budget.GetUncommittedChanges();
-		Console.WriteLine($"\n New Events: {newEvents}");
-		await _eventStore.SaveEventsAsync(budget.Id, newEvents);
+		await _eventStore.SaveBudgetEventsAsync(budget.Id, newEvents);
 		budget.MarkChangesAsCommitted();
 	}
 }

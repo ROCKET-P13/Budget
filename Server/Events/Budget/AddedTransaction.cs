@@ -1,8 +1,7 @@
-namespace Server.Events;
+namespace Server.Events.Budget;
 
-public class AddedTransaction : EventEntity
+public class AddedTransaction : BudgetEventEntity
 {
-	public new Guid BudgetId { get; set; } 
 	public Guid? CategoryId { get; set; }
 	public Guid TransactionId { get; set; }
 	public decimal Amount { get; set; }

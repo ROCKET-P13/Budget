@@ -12,27 +12,28 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 		{
 			Id = budget.Id,
 			Name = budget.Name,
-			Categories = [
-				.. budget.Categories.Select(c => new CategoryViewModel
-				{
-					Id = c.Id,
-					Name = c.Name,
-					PlannedAmount = c.PlannedAmount,
-					Transactions = [
-						.. budget.Transactions
-						.Where(t => t.CategoryId == c.Id)
-						.Select(t => new TransactionViewModel
-						{
-							Id = t.Id,
-							CategoryId = t.CategoryId,
-							Description = t.Description,
-							Merchant = t.Merchant,
-							Amount = t.Amount,
-							Date = t.Date
-						}).ToList()
-					]
-				}).ToList()
-			]
+			Categories = []
+			// Categories = [
+			// 	.. budget.Categories.Select(c => new CategoryViewModel
+			// 	{
+			// 		Id = c.Id,
+			// 		Name = c.Name,
+			// 		PlannedAmount = c.PlannedAmount,
+			// 		Transactions = [
+			// 			.. budget.Transactions
+			// 			.Where(t => t.CategoryId == c.Id)
+			// 			.Select(t => new TransactionViewModel
+			// 			{
+			// 				Id = t.Id,
+			// 				CategoryId = t.CategoryId,
+			// 				Description = t.Description,
+			// 				Merchant = t.Merchant,
+			// 				Amount = t.Amount,
+			// 				Date = t.Date
+			// 			}).ToList()
+			// 		]
+			// 	}).ToList()
+			// ]
 		};
 
 		return budgetDTO;

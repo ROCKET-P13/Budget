@@ -1,6 +1,6 @@
-namespace Server.Events;
+namespace Server.Events.Budget;
 
-public class UpdatedTransaction : EventEntity
+public class UpdatedTransaction : BudgetEventEntity
 {
 	public Guid TransactionId { get; set; }
 	public Guid? CategoryId { get; set; }

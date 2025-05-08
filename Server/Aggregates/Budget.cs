@@ -1,5 +1,4 @@
-using Server.Events;
-using Server.Models;
+using Server.Events.Budget;
 
 namespace Server.Aggregates;
 
@@ -8,14 +7,64 @@ public class Budget
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
 
-	private readonly List<EventEntity> _events = [];
+	private class Category
+	{
+		public Guid Id { get; set; }
+		public string? Name { get; set; }
+		public decimal PlannedAmount { get; set; }
+		public bool? IsDebt { get; set; }
+	}
+
+	private class Transaction
+	{
+		public Guid Id { get; set; }
+		public Guid? CategoryId { get; set; }
+		public string? Date { get; set; }
+		public decimal? Amount { get; set; }
+		public string? Merchant { get; set; }
+		public string? Description { get; set; }
+
+		public void UpdateFrom (UpdatedTransaction @event)
+		{
+			if (@event.CategoryId != Guid.Empty)
+				CategoryId = @event.CategoryId;
+
+			if (!string.IsNullOrWhiteSpace(@event.Date))
+				Date = @event.Date;
+
+			if (@event.Amount != decimal.Zero)
+				Amount = @event.Amount;
+
+			if (!string.IsNullOrWhiteSpace(@event.Merchant))
+				Merchant = @event.Merchant;
+
+			if (!string.IsNullOrWhiteSpace(@event.Description))
+				Description = @event.Description;
+
+		}
+	}
+
+	private readonly List<BudgetEventEntity> _events = [];
 	private readonly List<Category> _categories = [];
 	private readonly List<Transaction> _transactions = [];
 
-	public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
-	public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
+	public IEnumerable<object> Categories => _categories.Select(category => new {
+		category.Id,
+		category.Name,
+		category.PlannedAmount,
+		category.IsDebt
+	});
 
-	public Budget(IEnumerable<EventEntity> events)
+	public IEnumerable<object> Transactions => _transactions.Select(transaction => new {
+		transaction.Id,
+		transaction.CategoryId,
+		transaction.Date,
+		transaction.Amount,
+		transaction.Merchant,
+		transaction.Description
+	});
+
+	public Budget(IEnumerable<BudgetEventEntity> events)
 	{
 		foreach (var @event in events)
 		{
@@ -24,7 +73,7 @@ public class Budget
 		}
 	}
 
-	private void Apply(EventEntity @event)
+	private void Apply(BudgetEventEntity @event)
 	{
 		switch (@event)
 		{
@@ -36,15 +85,12 @@ public class Budget
 				ApplyAddedCategory(e);
 				break;
 
-			case UpdatedCategory e:
-				ApplyUpdatedCategory(e);
-				break;
-
 			case AddedTransaction e:
 				ApplyAddedTransaction(e);
 				break;
 
 			case UpdatedTransaction e:
+				ApplyUpdatedTransaction(e);
 				break;
 
 			default:
@@ -52,12 +98,12 @@ public class Budget
 		}
 	}
 
-	private void AddEvent(EventEntity @event)
+	private void AddEvent(BudgetEventEntity @event)
 	{
 		_events.Add(@event);
 	}
 
-	public IReadOnlyCollection<EventEntity> GetUncommittedChanges() => _events.FindAll(e => e.Id == Guid.Empty);
+	public IReadOnlyCollection<BudgetEventEntity> GetUncommittedChanges() => _events.FindAll(e => e.Id == Guid.Empty);
 	
 	public void MarkChangesAsCommitted() => _events.Clear();
 
@@ -92,23 +138,6 @@ public class Budget
 		AddEvent(transactionAddedEvent);
 	}
 
-	public void UpdateCategory(Guid categoryId, decimal PlannedAmount, string name)
-	{
-
-		var category = _categories.Find(c => c.Id == categoryId) ?? throw new Exception("Category not found");
-
-        var updatedCategoryEvent = new UpdatedCategory
-		{
-			BudgetId = Id,
-			CategoryId = categoryId,
-			CategoryName = name,
-			PlannedAmount = PlannedAmount,
-		};
-
-		Apply(updatedCategoryEvent);
-		AddEvent(updatedCategoryEvent);
-	}
-	
 	public void UpdateTransaction(Guid transactionId, decimal amount, string merchant, string description)
 	{
 		var transaction = _transactions.Find(t => t.Id == transactionId) ?? throw new Exception("Transaction not found");
@@ -151,17 +180,29 @@ public class Budget
 
 	private void ApplyAddedCategory(AddedCategory @event)
 	{
-		_categories.Add(new Category(@event));
+		_categories.Add(
+			new Category
+			{
+				Id = @event.CategoryId,
+				Name = @event.CategoryName,
+				PlannedAmount = @event.PlannedAmount,
+				IsDebt = @event.IsDebt
+			}
+		);
 	}
 
 	private void ApplyAddedTransaction(AddedTransaction @event)
 	{
-		_transactions.Add(new Transaction(@event));
-	}
-
-	private void ApplyUpdatedCategory(UpdatedCategory @event)
-	{
-		var category = _categories.Find(e => e.Id == @event.CategoryId);
+		_transactions.Add(
+			new Transaction
+			{
+				Id = @event.TransactionId,
+				CategoryId = @event.CategoryId,
+				Date = @event.Date,
+				Amount = @event.Amount,
+				Description = @event.Description
+			}
+		);
 	}
 
 	private void ApplyUpdatedTransaction(UpdatedTransaction @event)

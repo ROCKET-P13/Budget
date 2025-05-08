@@ -1,38 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs.Requests;
-using Server.Factories.BudgetViewModelFactory.Interfaces;
-using Server.Repositories.BudgetRepository.Interfaces;
+using Server.Factories.CategoryFactory.Interfaces;
+using Server.Repositories.CategoryRepository.Interfaces;
 
 namespace Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 
-public class CategoryController(IBudgetRepository budgetRepository, IBudgetViewModelFactory budgetViewModelFactory) : ControllerBase
+public class CategoryController(ICategoryRepository categoryRepository, ICategoryFactory categoryFactory) : ControllerBase
 {
-	private readonly IBudgetRepository _budgetRepository = budgetRepository;
-	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
+	private readonly ICategoryRepository _categoryRepository = categoryRepository;
+	private readonly ICategoryFactory _categoryFactory = categoryFactory;
 
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
 	{
-		var budget = await _budgetRepository.GetById(request.BudgetId);
-		budget.AddCategory(request.Name, request.PlannedAmount);
+		var category = _categoryFactory.Create(request.Name);
 
-		await _budgetRepository.SaveAsync(budget);
+		await _categoryRepository.SaveAsync(category);
 
-		return Ok(_budgetViewModelFactory.FromAggregate(budget));
-	}
-
-	[HttpPatch]
-	public async Task<IActionResult> Update ([FromBody] UpdateCategoryRequest request)
-	{
-		var budget = await _budgetRepository.GetById(request.BudgetId);
-		budget.UpdateCategory(request.CategoryId, request.PlannedAmount, request.Name);
-
-		await _budgetRepository.SaveAsync(budget);
-
-		return Ok(_budgetViewModelFactory.FromAggregate(budget));
-
+		return Ok(new
+		{
+			category.Id,
+			category.Name,
+		});
 	}
 }
