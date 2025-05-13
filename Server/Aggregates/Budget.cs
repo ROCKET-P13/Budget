@@ -95,12 +95,12 @@ public class Budget
 	
 	public void MarkChangesAsCommitted() => _events.Clear();
 
-	public void AddCategory(string name, decimal PlannedAmount)
+	public void AddCategory(string name, decimal PlannedAmount, Guid categoryId)
 	{
 		var categoryAddedEvent = new AddedCategory
 		{
 			BudgetId = Id,
-			CategoryId = Guid.NewGuid(),
+			CategoryId = categoryId,
 			CategoryName = name,
 			PlannedAmount = PlannedAmount,
 		};

@@ -38,9 +38,10 @@ public class BudgetController
 	[HttpPost("{budgetId}/categories")]
 	public async Task<IActionResult> AddCategory([FromBody] AddCategoryToBudgetRequest request, [FromRoute] Guid budgetId)
 	{
-		var category = await _categoryRepository.GetById(request.CategoryId);
-		var budget = await _budgetRepository.GetById(budgetId);
-		budget.AddCategory(category.Name, request.PlannedAmount);
+		var category = await _categoryRepository.GetById(request.CategoryId) ?? throw new Exception("Invalid Category");
+        var budget = await _budgetRepository.GetById(budgetId) ?? throw new Exception("Invalid Budget");
+
+		budget.AddCategory(category.Name, request.PlannedAmount, category.Id);
 
 		await _budgetRepository.SaveAsync(budget);
 		return Ok(_budgetViewModelFactory.FromAggregate(budget));
