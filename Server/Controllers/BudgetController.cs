@@ -41,7 +41,7 @@ public class BudgetController
 		var category = await _categoryRepository.GetById(request.CategoryId) ?? throw new Exception("Invalid Category");
         var budget = await _budgetRepository.GetById(budgetId) ?? throw new Exception("Invalid Budget");
 
-		budget.AddCategory(category.Name, request.PlannedAmount, category.Id);
+		budget.AddCategory(request.PlannedAmount, category);
 
 		await _budgetRepository.SaveAsync(budget);
 		return Ok(_budgetViewModelFactory.FromAggregate(budget));

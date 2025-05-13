@@ -16,7 +16,7 @@ public class CategoryController(ICategoryRepository categoryRepository, ICategor
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
 	{
-		var category = _categoryFactory.Create(request.Name);
+		var category = _categoryFactory.Create(request.Name, request.IsDebt);
 
 		await _categoryRepository.SaveAsync(category);
 

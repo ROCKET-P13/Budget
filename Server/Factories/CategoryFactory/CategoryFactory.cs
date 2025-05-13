@@ -6,12 +6,13 @@ namespace Server.Factories.CategoryFactory;
 
 public class CategoryFactory : ICategoryFactory
 {
-	public Category Create(string name)
+	public Category Create(string name, bool isDebt)
 	{
 		var createdCategoryEvent = new CreatedCategory
 		{
 			CategoryName = name,
-			CategoryId = Guid.NewGuid()
+			CategoryId = Guid.NewGuid(),
+			IsDebt = isDebt
 		};
 
 		var category = new Category([createdCategoryEvent]);

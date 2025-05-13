@@ -7,7 +7,7 @@ public class Budget
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
 
-	public class Category
+	public class BudgetCategory
 	{
 		public Guid Id { get; set; }
 		public string? Name { get; set; }
@@ -45,10 +45,10 @@ public class Budget
 	}
 
 	private readonly List<BudgetEventEntity> _events = [];
-	private readonly List<Category> _categories = [];
+	private readonly List<BudgetCategory> _categories = [];
 	private readonly List<Transaction> _transactions = [];
 
-	public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
+	public IReadOnlyCollection<BudgetCategory> Categories => _categories.AsReadOnly();
 
 	public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
 
@@ -95,14 +95,15 @@ public class Budget
 	
 	public void MarkChangesAsCommitted() => _events.Clear();
 
-	public void AddCategory(string name, decimal PlannedAmount, Guid categoryId)
+	public void AddCategory(decimal PlannedAmount, Category category)
 	{
 		var categoryAddedEvent = new AddedCategory
 		{
 			BudgetId = Id,
-			CategoryId = categoryId,
-			CategoryName = name,
+			CategoryId = category.Id,
+			CategoryName = category.Name,
 			PlannedAmount = PlannedAmount,
+			IsDebt = category.IsDebt
 		};
 
 		Apply(categoryAddedEvent);
@@ -169,7 +170,7 @@ public class Budget
 	private void ApplyAddedCategory(AddedCategory @event)
 	{
 		_categories.Add(
-			new Category
+			new BudgetCategory
 			{
 				Id = @event.CategoryId,
 				Name = @event.CategoryName,
