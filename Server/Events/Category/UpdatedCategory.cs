@@ -1,8 +1,7 @@
-namespace Server.Events;
+namespace Server.Events.Category;
 
-public class UpdatedCategory : EventEntity
+public class UpdatedCategory : CategoryEventEntity
 {
-	public Guid CategoryId { get; set; }
 	public decimal PlannedAmount { get; set; }
 	public string CategoryName { get; set; } = string.Empty;
 }

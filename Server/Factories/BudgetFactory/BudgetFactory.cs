@@ -1,4 +1,4 @@
-using Server.Events;
+using Server.Events.Budget;
 using Server.Factories.BudgetFactory.Interfaces;
 using Server.Aggregates;
 
@@ -8,8 +8,6 @@ public class BudgetFactory : IBudgetFactory
 {
 	public Budget Create(string name)
 	{
-
-
 		var budgetCreatedEvent = new CreatedBudget
 		{
 			BudgetName = name,

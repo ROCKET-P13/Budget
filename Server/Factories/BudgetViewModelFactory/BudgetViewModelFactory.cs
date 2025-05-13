@@ -18,6 +18,7 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 					Id = c.Id,
 					Name = c.Name,
 					PlannedAmount = c.PlannedAmount,
+					IsDebt = c.IsDebt,
 					Transactions = [
 						.. budget.Transactions
 						.Where(t => t.CategoryId == c.Id)

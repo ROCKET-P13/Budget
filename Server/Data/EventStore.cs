@@ -2,7 +2,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Server.Data.Interfaces;
+using Server.Events.Budget;
 using Server.Events;
+using Server.Events.Category;
 
 namespace Server.Data;
 
@@ -33,8 +35,8 @@ public class EventStore: IEventStore
 								DerivedTypes =
 								{
 									new JsonDerivedType(typeof(CreatedBudget), "CreatedBudget"),
+									new JsonDerivedType(typeof(CreatedCategory), "CreatedCategory"),
 									new JsonDerivedType(typeof(AddedCategory), "AddedCategory"),
-									new JsonDerivedType(typeof(UpdatedCategory), "UpdatedCategory"),	
 									new JsonDerivedType(typeof(AddedTransaction), "AddedTransaction")
 								}
 							};
@@ -45,56 +47,103 @@ public class EventStore: IEventStore
 		};
 	}
 
-	public async Task SaveEventsAsync (Guid budgetId, IReadOnlyCollection<EventEntity> domainEvents)
+	public async Task SaveBudgetEvents(Guid budgetId, IReadOnlyCollection<EventEntity> domainEvents)
 	{
 		foreach (var domainEvent in domainEvents)
 		{
-
 			var eventId = Guid.NewGuid();
 			var eventTimeStamp = DateTime.UtcNow;
-			domainEvent.Id = eventId;
-			domainEvent.Timestamp = eventTimeStamp;
 
-			var eventJson = JsonSerializer.Serialize(domainEvent, _serializerOptions);
-			var jsonDict = JsonSerializer.Deserialize<Dictionary<string, object>>(eventJson);
-
-			var serializedEvent = JsonSerializer.Serialize(jsonDict, _serializerOptions);
-
-			var eventEntity = new Event
+			var eventEntity = new BudgetEvent
 			{
 				Id = eventId,
 				Type = domainEvent.GetType().Name,
 				BudgetId = budgetId,
 				Timestamp = eventTimeStamp,
-				EventData = serializedEvent,
+				EventData = SerializeDomainEvent(domainEvent, eventId, eventTimeStamp),
 			};
 
-			_dbContext.Events.Add(eventEntity);
+			_dbContext.BudgetEvents.Add(eventEntity);
 		}
 
 		await _dbContext.SaveChangesAsync();
 	}
 
-	public async Task<List<EventEntity>> GetEventsAsync (Guid budgetId)
+	public async Task SaveCategoryEvents(Guid categoryId, IReadOnlyCollection<EventEntity> domainEvents)
 	{
-		var eventEntities = await _dbContext.Events
+		foreach (var domainEvent in domainEvents)
+		{
+			var eventId = Guid.NewGuid();
+			var eventTimeStamp = DateTime.UtcNow;
+
+			var eventEntity = new CategoryEvent
+			{
+				Id = eventId,
+				Type = domainEvent.GetType().Name,
+				CategoryId = categoryId,
+				Timestamp = eventTimeStamp,
+				EventData = SerializeDomainEvent(domainEvent, eventId, eventTimeStamp),
+			};
+
+			_dbContext.CategoryEvents.Add(eventEntity);
+		}
+
+		await _dbContext.SaveChangesAsync();
+	}
+
+	private string SerializeDomainEvent(EventEntity domainEvent, Guid eventId, DateTime eventTimeStamp)
+	{
+			domainEvent.Id = eventId;
+			domainEvent.Timestamp = eventTimeStamp;		
+
+			var eventJson = JsonSerializer.Serialize(domainEvent, _serializerOptions);
+			var jsonDict = JsonSerializer.Deserialize<Dictionary<string, object>>(eventJson);
+
+			var serializedEvent = JsonSerializer.Serialize(jsonDict, _serializerOptions);
+			return serializedEvent;
+	}
+
+	public async Task<List<BudgetEventEntity>> GetBudgetEvents(Guid budgetId)
+	{
+		var eventEntities = await _dbContext.BudgetEvents
 			.Where(e => e.BudgetId == budgetId)
 			.OrderBy(e => e.Timestamp)
 			.ToListAsync();
 
-		var events = new List<EventEntity>();
+		var events = new List<BudgetEventEntity>();
 
 		foreach (var entity in eventEntities)
 		{
-			var eventType = Type.GetType($"Server.Events.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
+			var eventType = Type.GetType($"Server.Events.Budget.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
 
 			var deserializedEvent = JsonSerializer.Deserialize(entity.EventData, eventType, _serializerOptions) ?? throw new InvalidOperationException($"Failed to deserialize event of type{eventType}");
 
-			var domainEvent = (EventEntity)deserializedEvent;
+			var domainEvent = (BudgetEventEntity)deserializedEvent;
             events.Add(domainEvent);
         }
 
 		return events;
     }
 
+	public async Task<List<CategoryEventEntity>> GetCategoryEvents(Guid categoryId)
+	{
+		var eventEntities = await _dbContext.CategoryEvents
+			.Where(e => e.CategoryId == categoryId)
+			.OrderBy(e => e.Timestamp)
+			.ToListAsync();
+
+		var events = new List<CategoryEventEntity>();
+
+		foreach (var entity in eventEntities)
+		{
+			var eventType = Type.GetType($"Server.Events.Category.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
+
+			var deserializedEvent = JsonSerializer.Deserialize(entity.EventData, eventType, _serializerOptions) ?? throw new InvalidOperationException($"Failed to deserialize event of type{eventType}");
+
+			var domainEvent = (CategoryEventEntity)deserializedEvent;
+            events.Add(domainEvent);
+        }
+
+		return events;
+    }
 }
