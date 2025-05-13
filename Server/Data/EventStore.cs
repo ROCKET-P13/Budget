@@ -47,7 +47,7 @@ public class EventStore: IEventStore
 		};
 	}
 
-	public async Task SaveBudgetEventsAsync (Guid budgetId, IReadOnlyCollection<EventEntity> domainEvents)
+	public async Task SaveBudgetEvents(Guid budgetId, IReadOnlyCollection<EventEntity> domainEvents)
 	{
 		foreach (var domainEvent in domainEvents)
 		{
@@ -69,7 +69,7 @@ public class EventStore: IEventStore
 		await _dbContext.SaveChangesAsync();
 	}
 
-	public async Task SaveCategoryEventsAsync (Guid categoryId, IReadOnlyCollection<EventEntity> domainEvents)
+	public async Task SaveCategoryEvents(Guid categoryId, IReadOnlyCollection<EventEntity> domainEvents)
 	{
 		foreach (var domainEvent in domainEvents)
 		{
@@ -91,7 +91,7 @@ public class EventStore: IEventStore
 		await _dbContext.SaveChangesAsync();
 	}
 
-	private string SerializeDomainEvent (EventEntity domainEvent, Guid eventId, DateTime eventTimeStamp)
+	private string SerializeDomainEvent(EventEntity domainEvent, Guid eventId, DateTime eventTimeStamp)
 	{
 			domainEvent.Id = eventId;
 			domainEvent.Timestamp = eventTimeStamp;		
@@ -103,7 +103,7 @@ public class EventStore: IEventStore
 			return serializedEvent;
 	}
 
-	public async Task<List<BudgetEventEntity>> GetBudgetEventsAsync (Guid budgetId)
+	public async Task<List<BudgetEventEntity>> GetBudgetEvents(Guid budgetId)
 	{
 		var eventEntities = await _dbContext.BudgetEvents
 			.Where(e => e.BudgetId == budgetId)
@@ -125,7 +125,7 @@ public class EventStore: IEventStore
 		return events;
     }
 
-	public async Task<List<CategoryEventEntity>> GetCategoryEventsAsync (Guid categoryId)
+	public async Task<List<CategoryEventEntity>> GetCategoryEvents(Guid categoryId)
 	{
 		var eventEntities = await _dbContext.CategoryEvents
 			.Where(e => e.CategoryId == categoryId)

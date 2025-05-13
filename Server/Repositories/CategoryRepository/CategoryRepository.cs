@@ -10,7 +10,7 @@ public class CategoryRepository(IEventStore eventStore) : ICategoryRepository
 
 	public async Task<Category> GetById(Guid categoryId)
 	{
-		var events = await _eventStore.GetCategoryEventsAsync(categoryId);
+		var events = await _eventStore.GetCategoryEvents(categoryId);
 		if (events.Count == 0)
 			throw new InvalidOperationException("Category not found");
 
@@ -20,7 +20,7 @@ public class CategoryRepository(IEventStore eventStore) : ICategoryRepository
 	public async Task SaveAsync(Category category)
 	{
 		var newEvents = category.GetUncommittedChanges();
-		await _eventStore.SaveCategoryEventsAsync(category.Id, newEvents);
+		await _eventStore.SaveCategoryEvents(category.Id, newEvents);
 		category.MarkChangesAsCommitted();
 	}
 }
