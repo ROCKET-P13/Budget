@@ -3,6 +3,7 @@ using Server.DTOs.Requests;
 using Server.Factories.BudgetFactory.Interfaces;
 using Server.Factories.BudgetViewModelFactory.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
+using Server.Repositories.CategoryRepository.Interfaces;
 
 namespace Server.Controllers;
 [ApiController]
@@ -12,12 +13,14 @@ public class BudgetController
 (
 	IBudgetRepository budgetRepository,
 	IBudgetFactory budgetFactory,
-	IBudgetViewModelFactory budgetViewModelFactory
+	IBudgetViewModelFactory budgetViewModelFactory,
+	ICategoryRepository categoryRepository
 ) : ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = budgetRepository;
 	private readonly IBudgetFactory _budgetFactory = budgetFactory;
 	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
+	private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateBudgetRequest request)
@@ -30,6 +33,18 @@ public class BudgetController
 			budget.Id,
 			budget.Name,
 		});
+	}
+
+	[HttpPost("{budgetId}/categories")]
+	public async Task<IActionResult> AddCategory([FromBody] AddCategoryToBudgetRequest request, [FromRoute] Guid budgetId)
+	{
+		var category = await _categoryRepository.GetById(request.CategoryId);
+		var budget = await _budgetRepository.GetById(budgetId);
+		budget.AddCategory(category.Name, request.PlannedAmount);
+
+		await _budgetRepository.SaveAsync(budget);
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
+
 	}
 
 	[HttpGet("{id}")]

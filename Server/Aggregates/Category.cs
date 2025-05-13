@@ -2,7 +2,7 @@ using Server.Events.Category;
 
 namespace Server.Aggregates;
 
-public class CategoryAggregate
+public class Category
 {
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
@@ -13,7 +13,7 @@ public class CategoryAggregate
 
 	public void MarkChangesAsCommitted() => _events.Clear();
 
-	public CategoryAggregate(IEnumerable<CategoryEventEntity> events)
+	public Category(IEnumerable<CategoryEventEntity> events)
 	{
 		foreach (var @event in events)
 		{

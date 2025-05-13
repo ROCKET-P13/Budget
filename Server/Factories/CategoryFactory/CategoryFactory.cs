@@ -6,7 +6,7 @@ namespace Server.Factories.CategoryFactory;
 
 public class CategoryFactory : ICategoryFactory
 {
-	public CategoryAggregate Create(string name)
+	public Category Create(string name)
 	{
 		var createdCategoryEvent = new CreatedCategory
 		{
@@ -14,7 +14,7 @@ public class CategoryFactory : ICategoryFactory
 			CategoryId = Guid.NewGuid()
 		};
 
-		var category = new CategoryAggregate([createdCategoryEvent]);
+		var category = new Category([createdCategoryEvent]);
 
 		return category;
 	}

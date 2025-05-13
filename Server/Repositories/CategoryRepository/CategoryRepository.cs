@@ -8,16 +8,16 @@ public class CategoryRepository(IEventStore eventStore) : ICategoryRepository
 {
 	private readonly IEventStore _eventStore = eventStore;
 
-	public async Task<CategoryAggregate> GetById(Guid categoryId)
+	public async Task<Category> GetById(Guid categoryId)
 	{
 		var events = await _eventStore.GetCategoryEventsAsync(categoryId);
 		if (events.Count == 0)
 			throw new InvalidOperationException("Category not found");
 
-		return new CategoryAggregate(events);
+		return new Category(events);
 	}
 
-	public async Task SaveAsync(CategoryAggregate category)
+	public async Task SaveAsync(Category category)
 	{
 		var newEvents = category.GetUncommittedChanges();
 		await _eventStore.SaveCategoryEventsAsync(category.Id, newEvents);

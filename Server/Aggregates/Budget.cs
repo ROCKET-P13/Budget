@@ -7,7 +7,7 @@ public class Budget
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
 
-	private class Category
+	public class Category
 	{
 		public Guid Id { get; set; }
 		public string? Name { get; set; }
@@ -15,7 +15,7 @@ public class Budget
 		public bool? IsDebt { get; set; }
 	}
 
-	private class Transaction
+	public class Transaction
 	{
 		public Guid Id { get; set; }
 		public Guid? CategoryId { get; set; }
@@ -48,21 +48,9 @@ public class Budget
 	private readonly List<Category> _categories = [];
 	private readonly List<Transaction> _transactions = [];
 
-	public IEnumerable<object> Categories => _categories.Select(category => new {
-		category.Id,
-		category.Name,
-		category.PlannedAmount,
-		category.IsDebt
-	});
+	public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
 
-	public IEnumerable<object> Transactions => _transactions.Select(transaction => new {
-		transaction.Id,
-		transaction.CategoryId,
-		transaction.Date,
-		transaction.Amount,
-		transaction.Merchant,
-		transaction.Description
-	});
+	public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
 
 	public Budget(IEnumerable<BudgetEventEntity> events)
 	{
