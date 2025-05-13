@@ -1,6 +1,8 @@
+using Server.Events.Interfaces;
+
 namespace Server.Events;
 
-public class Event
+public class Event : IEvent
 {
 	public Guid Id { get; set; }
 	public DateTime Timestamp { get; set; }
