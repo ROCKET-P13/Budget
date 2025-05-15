@@ -22,6 +22,19 @@ public class BudgetController
 	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
 	private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
+	[HttpGet("{id}")]
+	public async Task<IActionResult> Get(Guid id)
+	{
+		var budget = await _budgetRepository.GetById(id);
+		if (budget == null)
+		{
+			return NotFound();
+		}
+
+
+		return Ok(_budgetViewModelFactory.FromAggregate(budget));
+	}
+
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateBudgetRequest request)
 	{
@@ -45,19 +58,22 @@ public class BudgetController
 
 		await _budgetRepository.SaveAsync(budget);
 		return Ok(_budgetViewModelFactory.FromAggregate(budget));
-
 	}
 
-	[HttpGet("{id}")]
-	public async Task<IActionResult> Get(Guid id)
+	[HttpPost("{budgetId}/transactions")]
+	public async Task<IActionResult> AddTransaction([FromBody] AddTransactionToBudgetRequest request,[FromRoute] Guid budgetId)
 	{
-		var budget = await _budgetRepository.GetById(id);
-		if (budget == null)
-		{
-			return NotFound();
-		}
-
-
+		var budget = await _budgetRepository.GetById(budgetId) ?? throw new Exception("Budget not found.");
+		budget.AddTransaction(
+			request.CategoryId,
+			request.Merchant,
+			request.Amount,
+			request.Date,
+			request.Description
+		);
+		
+		await _budgetRepository.SaveAsync(budget);
 		return Ok(_budgetViewModelFactory.FromAggregate(budget));
 	}
+
 }
