@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationOne : Migration
+    public partial class One : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BudgetEvents",
+                name: "BudgetEvent",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -23,11 +23,11 @@ namespace Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BudgetEvents", x => x.id);
+                    table.PrimaryKey("PK_BudgetEvent", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryEvents",
+                name: "CategoryEvent",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -38,7 +38,7 @@ namespace Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryEvents", x => x.id);
+                    table.PrimaryKey("PK_CategoryEvent", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,10 +60,10 @@ namespace Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BudgetEvents");
+                name: "BudgetEvent");
 
             migrationBuilder.DropTable(
-                name: "CategoryEvents");
+                name: "CategoryEvent");
 
             migrationBuilder.DropTable(
                 name: "CategoryProjection");
