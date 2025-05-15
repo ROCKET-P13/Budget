@@ -12,6 +12,7 @@ public class CategoryFactory : ICategoryFactory
 		{
 			CategoryName = name,
 			CategoryId = Guid.NewGuid(),
+			CreatedAt = DateTime.UtcNow,
 			IsDebt = isDebt
 		};
 
