@@ -1,14 +1,17 @@
 using Server.Aggregates;
+using Server.Data;
 using Server.Data.Interfaces;
+using Server.DTOs.Projection;
 using Server.Repositories.CategoryRepository.Interfaces;
 
 namespace Server.Repositories.CategoryRepository;
 
-public class CategoryRepository(IEventStore eventStore) : ICategoryRepository
+public class CategoryRepository(IEventStore eventStore, AppDatabaseContext databaseContext) : ICategoryRepository
 {
 	private readonly IEventStore _eventStore = eventStore;
+	private readonly AppDatabaseContext _dbContext = databaseContext;
 
-	public async Task<Category> GetById(Guid categoryId)
+    public async Task<Category> GetById(Guid categoryId)
 	{
 		var events = await _eventStore.GetCategoryEvents(categoryId);
 		if (events.Count == 0)
@@ -19,8 +22,19 @@ public class CategoryRepository(IEventStore eventStore) : ICategoryRepository
 
 	public async Task SaveAsync(Category category)
 	{
-		var newEvents = category.GetUncommittedChanges();
-		await _eventStore.SaveCategoryEvents(category.Id, newEvents);
+		await _eventStore.SaveCategoryEvents(category.Id, category.GetUncommittedChanges());
 		category.MarkChangesAsCommitted();
+
+		_dbContext.CategoryProjections.Add(
+			new CategoryProjection
+			{
+				Id = category.Id,
+				Name = category.Name,
+				IsDebt = category.IsDebt,
+				CreatedAt = category.CreatedAt
+			}
+		);
+
+		await _dbContext.SaveChangesAsync();
 	}
 }
