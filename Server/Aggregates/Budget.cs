@@ -112,6 +112,11 @@ public class Budget
 
 	public void AddTransaction(Guid? categoryId, string? merchant, decimal amount, string? date, string? description)
 	{
+		if (!_categories.Select(c => c.Id == categoryId).Any())
+		{
+			throw new Exception("Invalid category");
+		}
+		
 		var transactionAddedEvent = new AddedTransaction
 		{
 			TransactionId = Guid.NewGuid(),
@@ -144,23 +149,6 @@ public class Budget
 		AddEvent(updatedTransactionEvent);
 	}
 
-    public void AddTransaction(decimal amount, string description, string date, Guid categoryId, string merchant)
-	{
-		var transactionAddedEvent = new AddedTransaction
-		{
-			BudgetId = Id,
-			Merchant = merchant,
-			Amount = amount,
-			Description = description,
-			Date = date,
-			CategoryId = categoryId,
-			TransactionId = Guid.NewGuid()
-		};
-
-		Apply(transactionAddedEvent);
-		AddEvent(transactionAddedEvent);
-	}
-
 	private void ApplyCreatedBudget(CreatedBudget @event)
 	{
 		Name = @event.BudgetName;
@@ -189,7 +177,8 @@ public class Budget
 				CategoryId = @event.CategoryId,
 				Date = @event.Date,
 				Amount = @event.Amount,
-				Description = @event.Description
+				Description = @event.Description,
+				Merchant = @event.Merchant
 			}
 		);
 	}

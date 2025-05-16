@@ -25,7 +25,6 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 						.Select(t => new TransactionViewModel
 						{
 							Id = t.Id,
-							CategoryId = t.CategoryId,
 							Description = t.Description,
 							Merchant = t.Merchant,
 							Amount = t.Amount,
