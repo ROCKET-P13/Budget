@@ -28,4 +28,20 @@ public class CategoryController(ICategoryRepository categoryRepository, ICategor
 			category.CreatedAt
 		});
 	}
+
+	[HttpPut("{categoryId}")]
+	public async Task<IActionResult> Update([FromRoute] Guid categoryId, [FromBody] UpdateCategoryRequest request)
+	{
+		var category = await _categoryRepository.GetById(categoryId) ?? throw new Exception("Category not found");
+		category.UpdateName(request.Name);
+
+		await _categoryRepository.SaveAsync(category);
+		return Ok(new
+		{
+			category.Id,
+			category.Name,
+			category.IsDebt,
+			category.CreatedAt
+		});
+	}
 }

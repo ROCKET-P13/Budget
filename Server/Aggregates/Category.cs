@@ -32,9 +32,25 @@ public class Category
 				ApplyCreatedCategory(e);
 				break;
 
+			case UpdatedCategoryName e:
+				ApplyUpdatedCategoryName(e);
+				break;
+
 			default:
 				throw new Exception("Event type not supported");
 		}
+	}
+
+	public void UpdateName(string categoryName)
+	{
+		var updatedCategoryNameEvent = new UpdatedCategoryName
+		{
+			CategoryId = Id,
+			Name = categoryName,
+		};
+
+		AddEvent(updatedCategoryNameEvent);
+		Apply(updatedCategoryNameEvent);
 	}
 
 	private void AddEvent(CategoryEventEntity @event)
@@ -50,4 +66,9 @@ public class Category
 		CreatedAt = @event.CreatedAt;
 	}
 
+
+	private void ApplyUpdatedCategoryName(UpdatedCategoryName @event)
+	{
+		Name = @event.Name;
+	}
 }
