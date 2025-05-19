@@ -10,6 +10,7 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
 	public DbSet<BudgetEvent> BudgetEvents { get; set; }
 	public DbSet<CategoryEvent> CategoryEvents { get; set; }
 	public DbSet<CategoryProjection> CategoryProjections { get; set; }
+	public DbSet<BudgetProjection> BudgetProjections { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<BudgetEvent>(entity =>
@@ -39,6 +40,13 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
 			entity.Property(e => e.Name).HasColumnName("name").IsRequired();
 			entity.Property(e => e.CreatedAt).HasColumnName("created_at");
 			entity.Property(e => e.IsDebt).HasColumnName("is_debt");
+		});
+
+		modelBuilder.Entity<BudgetProjection>(entity =>
+		{
+			entity.ToTable("BudgetProjection");
+			entity.Property(e => e.Id).HasColumnName("id").IsRequired();
+			entity.Property(e => e.Name).HasColumnName("name").IsRequired();
 		});
 	}
 }

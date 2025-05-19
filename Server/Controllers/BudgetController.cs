@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.DTOs.Requests;
 using Server.Factories.BudgetFactory.Interfaces;
 using Server.Factories.BudgetViewModelFactory.Interfaces;
+using Server.Finders.BudgetFinder.Interfaces;
 using Server.Repositories.BudgetRepository.Interfaces;
 using Server.Repositories.CategoryRepository.Interfaces;
 
@@ -14,13 +15,22 @@ public class BudgetController
 	IBudgetRepository budgetRepository,
 	IBudgetFactory budgetFactory,
 	IBudgetViewModelFactory budgetViewModelFactory,
-	ICategoryRepository categoryRepository
+	ICategoryRepository categoryRepository,
+	IBudgetFinder budgetFinder
 ) : ControllerBase
 {
 	private readonly IBudgetRepository _budgetRepository = budgetRepository;
 	private readonly IBudgetFactory _budgetFactory = budgetFactory;
 	private readonly IBudgetViewModelFactory _budgetViewModelFactory = budgetViewModelFactory;
 	private readonly ICategoryRepository _categoryRepository = categoryRepository;
+	private readonly IBudgetFinder _budgetFinder = budgetFinder;
+	
+	[HttpGet]
+	public async Task<IActionResult> GetAll()
+	{
+		var budgets = await _budgetFinder.GetAll();
+		return Ok(budgets);
+	}
 
 	[HttpGet("{id}")]
 	public async Task<IActionResult> Get(Guid id)
