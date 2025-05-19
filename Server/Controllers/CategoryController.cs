@@ -24,6 +24,8 @@ public class CategoryController(ICategoryRepository categoryRepository, ICategor
 		{
 			category.Id,
 			category.Name,
+			category.IsDebt,
+			category.CreatedAt
 		});
 	}
 }
