@@ -38,6 +38,7 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
 			entity.Property(e => e.Id).HasColumnName("id").IsRequired();
 			entity.Property(e => e.Name).HasColumnName("name").IsRequired();
 			entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+			entity.Property(e => e.IsDebt).HasColumnName("is_debt");
 		});
 	}
 }

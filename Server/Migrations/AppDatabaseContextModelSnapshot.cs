@@ -34,7 +34,8 @@ namespace Server.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<bool>("IsDebt")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_debt");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -7,7 +7,6 @@ public class Category
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
 	public bool IsDebt { get; private set; } = false;
-	public decimal? PlannedAmount { get; private set; } = decimal.Zero;
 	public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
 	private readonly List<CategoryEventEntity> _events = [];
@@ -33,9 +32,25 @@ public class Category
 				ApplyCreatedCategory(e);
 				break;
 
+			case UpdatedCategoryName e:
+				ApplyUpdatedCategoryName(e);
+				break;
+
 			default:
 				throw new Exception("Event type not supported");
 		}
+	}
+
+	public void UpdateName(string categoryName)
+	{
+		var updatedCategoryNameEvent = new UpdatedCategoryName
+		{
+			CategoryId = Id,
+			Name = categoryName,
+		};
+
+		AddEvent(updatedCategoryNameEvent);
+		Apply(updatedCategoryNameEvent);
 	}
 
 	private void AddEvent(CategoryEventEntity @event)
@@ -48,8 +63,12 @@ public class Category
 		Id = @event.CategoryId;
 		Name = @event.CategoryName;
 		IsDebt = @event.IsDebt;
-		PlannedAmount = @event.PlannedAmount;
 		CreatedAt = @event.CreatedAt;
 	}
 
+
+	private void ApplyUpdatedCategoryName(UpdatedCategoryName @event)
+	{
+		Name = @event.Name;
+	}
 }

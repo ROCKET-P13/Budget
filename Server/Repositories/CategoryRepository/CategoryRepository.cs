@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Server.Aggregates;
 using Server.Data;
 using Server.Data.Interfaces;
@@ -25,15 +26,30 @@ public class CategoryRepository(IEventStore eventStore, AppDatabaseContext datab
 		await _eventStore.SaveCategoryEvents(category.Id, category.GetUncommittedChanges());
 		category.MarkChangesAsCommitted();
 
-		_dbContext.CategoryProjections.Add(
-			new CategoryProjection
-			{
-				Id = category.Id,
-				Name = category.Name,
-				IsDebt = category.IsDebt,
-				CreatedAt = category.CreatedAt
-			}
-		);
+		var existingProjection = _dbContext.CategoryProjections.AsNoTracking().FirstOrDefault(p => p.Id == category.Id);
+
+		if (existingProjection != null) {
+			_dbContext.CategoryProjections.Update(
+				new CategoryProjection
+				{
+					Id = category.Id,
+					Name = category.Name,
+					IsDebt = category.IsDebt,
+					CreatedAt = category.CreatedAt
+				}
+			);
+		} else {
+			_dbContext.CategoryProjections.Add(
+				new CategoryProjection
+				{
+					Id = category.Id,
+					Name = category.Name,
+					IsDebt = category.IsDebt,
+					CreatedAt = category.CreatedAt
+				}
+			);
+		}
+
 
 		await _dbContext.SaveChangesAsync();
 	}
