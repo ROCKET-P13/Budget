@@ -11,6 +11,8 @@ public class BudgetFinder(AppDatabaseContext databaseContext) : IBudgetFinder
 
 	public async Task<List<BudgetProjection>> GetAll ()
 	{
-		return await _dbContext.BudgetProjections.ToListAsync();
+		return await _dbContext.BudgetProjections
+			.OrderByDescending(p => p.CreatedAt)
+			.ToListAsync();
 	}
 }
