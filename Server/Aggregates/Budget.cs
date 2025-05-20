@@ -6,6 +6,7 @@ public class Budget
 {
 	public Guid Id { get; private set; }
 	public string Name { get; private set; } = string.Empty;
+	public DateTime CreatedAt { get; private set; }
 
 	public class BudgetCategory
 	{
@@ -152,6 +153,7 @@ public class Budget
 	{
 		Name = @event.BudgetName;
 		Id = @event.BudgetId;
+		CreatedAt = @event.CreatedAt;
 	}
 
 	private void ApplyAddedCategory(AddedCategory @event)

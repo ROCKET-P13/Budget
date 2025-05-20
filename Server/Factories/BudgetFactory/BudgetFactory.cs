@@ -11,7 +11,8 @@ public class BudgetFactory : IBudgetFactory
 		var budgetCreatedEvent = new CreatedBudget
 		{
 			BudgetName = name,
-			BudgetId = Guid.NewGuid()
+			BudgetId = Guid.NewGuid(),
+			CreatedAt = DateTime.UtcNow,
 		};
 
 		var budget = new Budget([budgetCreatedEvent]);

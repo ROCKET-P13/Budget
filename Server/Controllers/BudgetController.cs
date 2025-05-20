@@ -55,6 +55,7 @@ public class BudgetController
 		{
 			budget.Id,
 			budget.Name,
+			budget.CreatedAt
 		});
 	}
 
