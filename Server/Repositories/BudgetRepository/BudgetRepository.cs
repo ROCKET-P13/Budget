@@ -44,6 +44,7 @@ public class BudgetRepository(IEventStore eventStore, AppDatabaseContext databas
 				{
 					Id = budget.Id,
 					Name = budget.Name,
+					CreatedAt = DateTime.UtcNow
 				}
 			);
 		}
