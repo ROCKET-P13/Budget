@@ -58,6 +58,13 @@ public class BudgetController
 		});
 	}
 
+	[HttpGet("{budgetId}/categories")]
+	public async Task<IActionResult> GetBudgetCategories([FromRoute] Guid budgetId)
+	{
+		var budget = await _budgetRepository.GetById(budgetId);
+		return Ok(budget.Categories);
+	}
+
 	[HttpPost("{budgetId}/categories")]
 	public async Task<IActionResult> AddCategory([FromBody] AddCategoryToBudgetRequest request, [FromRoute] Guid budgetId)
 	{
