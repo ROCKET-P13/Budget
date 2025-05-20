@@ -28,7 +28,8 @@ public class CategoryRepository(IEventStore eventStore, AppDatabaseContext datab
 
 		var existingProjection = _dbContext.CategoryProjections.AsNoTracking().FirstOrDefault(p => p.Id == category.Id);
 
-		if (existingProjection != null) {
+		if (existingProjection != null)
+		{
 			_dbContext.CategoryProjections.Update(
 				new CategoryProjection
 				{
@@ -38,7 +39,8 @@ public class CategoryRepository(IEventStore eventStore, AppDatabaseContext datab
 					CreatedAt = category.CreatedAt
 				}
 			);
-		} else {
+		} else
+		{
 			_dbContext.CategoryProjections.Add(
 				new CategoryProjection
 				{

@@ -22,6 +22,23 @@ namespace Server.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Server.DTOs.Projection.BudgetProjection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BudgetProjection", (string)null);
+                });
+
             modelBuilder.Entity("Server.DTOs.Projection.CategoryProjection", b =>
                 {
                     b.Property<Guid>("Id")

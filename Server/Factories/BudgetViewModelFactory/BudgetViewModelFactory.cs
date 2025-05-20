@@ -12,6 +12,7 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 		{
 			Id = budget.Id,
 			Name = budget.Name,
+			TotalPlannedAmount = budget.Categories.Sum(c => c.PlannedAmount),
 			Categories = [
 				.. budget.Categories.Select(c => new CategoryViewModel
 				{
@@ -19,6 +20,7 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 					Name = c.Name,
 					PlannedAmount = c.PlannedAmount,
 					IsDebt = c.IsDebt,
+					SpentAmount = budget.Transactions.Sum(t => t.Amount),
 					Transactions = [
 						.. budget.Transactions
 						.Where(t => t.CategoryId == c.Id)

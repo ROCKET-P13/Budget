@@ -12,6 +12,10 @@ using Server.Repositories.CategoryRepository.Interfaces;
 using Server.Repositories.CategoryRepository;
 using Server.Factories.CategoryFactory.Interfaces;
 using Server.Factories.CategoryFactory;
+using Server.Finders.CategoryFinder.Interfaces;
+using Server.Finders.CategoryFinder;
+using Server.Finders.BudgetFinder.Interfaces;
+using Server.Finders.BudgetFinder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +31,9 @@ builder.Services.AddScoped<IBudgetViewModelFactory, BudgetViewModelFactory>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryFactory, CategoryFactory>();
+
+builder.Services.AddScoped<ICategoryFinder, CategoryFinder>();
+builder.Services.AddScoped<IBudgetFinder, BudgetFinder>();
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options => 

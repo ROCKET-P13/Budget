@@ -20,7 +20,7 @@ public class Budget
 		public Guid Id { get; set; }
 		public Guid? CategoryId { get; set; }
 		public string? Date { get; set; }
-		public decimal? Amount { get; set; }
+		public decimal Amount { get; set; }
 		public string? Merchant { get; set; }
 		public string? Description { get; set; }
 
@@ -40,7 +40,6 @@ public class Budget
 
 			if (!string.IsNullOrWhiteSpace(@event.Description))
 				Description = @event.Description;
-
 		}
 	}
 
