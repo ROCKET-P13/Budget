@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs.Requests;
 using Server.Factories.BudgetFactory.Interfaces;
@@ -26,6 +27,7 @@ public class BudgetController
 	private readonly IBudgetFinder _budgetFinder = budgetFinder;
 	
 	[HttpGet]
+	[Authorize]
 	public async Task<IActionResult> GetAll()
 	{
 		var budgets = await _budgetFinder.GetAll();

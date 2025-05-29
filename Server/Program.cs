@@ -16,12 +16,23 @@ using Server.Finders.CategoryFinder.Interfaces;
 using Server.Finders.CategoryFinder;
 using Server.Finders.BudgetFinder.Interfaces;
 using Server.Finders.BudgetFinder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDatabaseContext>(options =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options =>
+	{
+		options.Authority = "https://dev-niugi5p0dmp57h2e.us.auth0.com/";
+		options.Audience = "https://budget-api";
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			NameClaimType = "name"
+		};
+	});
 
 builder.Services.AddScoped<IEventStore, EventStore>();
 
@@ -53,6 +64,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
