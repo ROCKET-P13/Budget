@@ -27,7 +27,6 @@ public class BudgetController
 	private readonly IBudgetFinder _budgetFinder = budgetFinder;
 	
 	[HttpGet]
-	[Authorize]
 	public async Task<IActionResult> GetAll()
 	{
 		var budgets = await _budgetFinder.GetAll();
@@ -50,7 +49,11 @@ public class BudgetController
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateBudgetRequest request)
 	{
-		var budget = _budgetFactory.Create(request.Name);
+		var budget = _budgetFactory.Create(
+			request.Name,
+			request.Month,
+			request.Year
+		);
 
 		await _budgetRepository.SaveAsync(budget);
 		return Ok(new

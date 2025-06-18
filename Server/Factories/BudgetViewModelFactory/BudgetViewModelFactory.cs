@@ -12,6 +12,8 @@ public class BudgetViewModelFactory : IBudgetViewModelFactory
 		{
 			Id = budget.Id,
 			Name = budget.Name,
+			Month = budget.Month,
+			Year = budget.Year,
 			TotalPlannedAmount = budget.Categories.Sum(c => c.PlannedAmount),
 			Categories = [
 				.. budget.Categories.Select(c => new CategoryViewModel

@@ -47,6 +47,8 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
 			entity.ToTable("BudgetProjection");
 			entity.Property(e => e.Id).HasColumnName("id").IsRequired();
 			entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+			entity.Property(e => e.Month).HasColumnName("month");
+			entity.Property(e => e.Year).HasColumnName("year");
 			entity.Property(e => e.CreatedAt).HasColumnName("created_at");
 		});
 	}
