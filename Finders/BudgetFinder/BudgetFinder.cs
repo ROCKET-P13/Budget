@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.DTOs.Projection;
-using Server.Finders.BudgetFinder.Interfaces;
+using Data;
+using DTOs.Projection;
+using Finders.BudgetFinder.Interfaces;
 
-namespace Server.Finders.BudgetFinder;
+namespace Finders.BudgetFinder;
 
 public class BudgetFinder(AppDatabaseContext databaseContext) : IBudgetFinder
 {

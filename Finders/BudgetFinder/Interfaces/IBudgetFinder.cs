@@ -1,6 +1,6 @@
-using Server.DTOs.Projection;
+using DTOs.Projection;
 
-namespace Server.Finders.BudgetFinder.Interfaces;
+namespace Finders.BudgetFinder.Interfaces;
 
 public interface IBudgetFinder
 {

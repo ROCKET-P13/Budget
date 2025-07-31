@@ -1,4 +1,4 @@
-namespace Server.DTOs.Requests;
+namespace DTOs.Requests;
 
 public class AddCategoryToBudgetRequest
 {

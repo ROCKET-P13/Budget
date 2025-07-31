@@ -1,4 +1,4 @@
-namespace Server.DTOs.Projection;
+namespace DTOs.Projection;
 
 public class BudgetProjection
 {

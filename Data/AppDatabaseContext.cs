@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Server.DTOs.Projection;
-using Server.Events.Budget;
-using Server.Events.Category;
+using DTOs.Projection;
+using Events.Budget;
+using Events.Category;
 
-namespace Server.Data;
+namespace Data;
 
 public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : DbContext(options)
 {

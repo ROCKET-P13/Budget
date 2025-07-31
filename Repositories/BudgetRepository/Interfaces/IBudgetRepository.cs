@@ -1,6 +1,6 @@
-using Server.Aggregates;
+using Aggregates;
 
-namespace Server.Repositories.BudgetRepository.Interfaces;
+namespace Repositories.BudgetRepository.Interfaces;
 public interface IBudgetRepository
 {
 	Task<Budget> GetById(Guid id);

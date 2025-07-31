@@ -1,4 +1,4 @@
-namespace Server.DTOs.ViewModel;
+namespace DTOs.ViewModel;
 
 public class TransactionViewModel
 {

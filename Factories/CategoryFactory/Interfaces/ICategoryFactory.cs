@@ -1,6 +1,6 @@
-using Server.Aggregates;
+using Aggregates;
 
-namespace Server.Factories.CategoryFactory.Interfaces;
+namespace Factories.CategoryFactory.Interfaces;
 
 public interface ICategoryFactory
 {

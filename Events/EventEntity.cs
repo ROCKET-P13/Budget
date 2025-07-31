@@ -1,4 +1,4 @@
-namespace Server.Events;
+namespace Events;
 
 public class EventEntity
 {

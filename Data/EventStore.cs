@@ -1,12 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Microsoft.EntityFrameworkCore;
-using Server.Data.Interfaces;
-using Server.Events.Budget;
-using Server.Events;
-using Server.Events.Category;
+using Data.Interfaces;
+using Events.Budget;
+using Events;
+using Events.Category;
 
-namespace Server.Data;
+namespace Data;
 
 public class EventStore: IEventStore
 {
@@ -115,7 +115,7 @@ public class EventStore: IEventStore
 
 		foreach (var entity in eventEntities)
 		{
-			var eventType = Type.GetType($"Server.Events.Budget.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
+			var eventType = Type.GetType($"Events.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
 
 			var deserializedEvent = JsonSerializer.Deserialize(entity.EventData, eventType, _serializerOptions) ?? throw new InvalidOperationException($"Failed to deserialize event of type{eventType}");
 
@@ -137,7 +137,7 @@ public class EventStore: IEventStore
 
 		foreach (var entity in eventEntities)
 		{
-			var eventType = Type.GetType($"Server.Events.Category.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
+			var eventType = Type.GetType($"Events.Category.{entity.Type}") ?? throw new InvalidOperationException($"Cannot resolve event type: {entity.Type}");
 
 			var deserializedEvent = JsonSerializer.Deserialize(entity.EventData, eventType, _serializerOptions) ?? throw new InvalidOperationException($"Failed to deserialize event of type{eventType}");
 

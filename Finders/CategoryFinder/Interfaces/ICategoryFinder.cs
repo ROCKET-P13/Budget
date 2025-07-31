@@ -1,6 +1,6 @@
-using Server.DTOs.Projection;
+using DTOs.Projection;
 
-namespace Server.Finders.CategoryFinder.Interfaces;
+namespace Finders.CategoryFinder.Interfaces;
 
 public interface ICategoryFinder
 {

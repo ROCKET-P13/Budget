@@ -1,4 +1,4 @@
-namespace Server.Events.Interfaces;
+namespace Events.Interfaces;
 
 public interface IEvent
 {

@@ -1,4 +1,4 @@
-namespace Server.Events.Budget;
+namespace Events.Budget;
 
 public class BudgetEvent : Event
 {

@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Aggregates;
-using Server.Data;
-using Server.Data.Interfaces;
-using Server.DTOs.Projection;
-using Server.Repositories.BudgetRepository.Interfaces;
+using Aggregates;
+using Data;
+using Data.Interfaces;
+using DTOs.Projection;
+using Repositories.BudgetRepository.Interfaces;
 
-namespace Server.Repositories.BudgetRepository;
+namespace Repositories.BudgetRepository;
 
 public class BudgetRepository(IEventStore eventStore, AppDatabaseContext databaseContext) : IBudgetRepository
 {

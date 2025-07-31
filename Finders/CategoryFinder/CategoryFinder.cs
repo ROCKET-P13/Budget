@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.DTOs.Projection;
-using Server.Finders.CategoryFinder.Interfaces;
+using Data;
+using DTOs.Projection;
+using Finders.CategoryFinder.Interfaces;
 
-namespace Server.Finders.CategoryFinder;
+namespace Finders.CategoryFinder;
 
 public class CategoryFinder(AppDatabaseContext databaseContext) : ICategoryFinder
 {

@@ -1,6 +1,6 @@
-using Server.Events.Interfaces;
+using Events.Interfaces;
 
-namespace Server.Events;
+namespace Events;
 
 public class Event : IEvent
 {

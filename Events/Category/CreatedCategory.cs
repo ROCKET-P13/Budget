@@ -1,5 +1,5 @@
 
-namespace Server.Events.Category;
+namespace Events.Category;
 
 public class CreatedCategory : CategoryEventEntity
 {

@@ -1,8 +1,8 @@
-using Server.Events.Budget;
-using Server.Factories.BudgetFactory.Interfaces;
-using Server.Aggregates;
+using Events.Budget;
+using Factories.BudgetFactory.Interfaces;
+using Aggregates;
 
-namespace Server.Factories.BudgetFactory;
+namespace Factories.BudgetFactory;
 
 public class BudgetFactory : IBudgetFactory
 {

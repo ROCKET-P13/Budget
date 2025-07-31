@@ -1,21 +1,21 @@
-using Server.Data;
+using Data;
 using Microsoft.EntityFrameworkCore;
-using Server.Repositories.BudgetRepository;
-using Server.Data.Interfaces;
-using Server.Repositories.BudgetRepository.Interfaces;
-using Server.Factories.BudgetFactory.Interfaces;
-using Server.Factories.BudgetFactory;
+using Repositories.BudgetRepository;
+using Data.Interfaces;
+using Repositories.BudgetRepository.Interfaces;
+using Factories.BudgetFactory.Interfaces;
+using Factories.BudgetFactory;
 using System.Text.Json;
-using Server.Factories.BudgetViewModelFactory.Interfaces;
-using Server.Factories.BudgetViewModelFactory;
-using Server.Repositories.CategoryRepository.Interfaces;
-using Server.Repositories.CategoryRepository;
-using Server.Factories.CategoryFactory.Interfaces;
-using Server.Factories.CategoryFactory;
-using Server.Finders.CategoryFinder.Interfaces;
-using Server.Finders.CategoryFinder;
-using Server.Finders.BudgetFinder.Interfaces;
-using Server.Finders.BudgetFinder;
+using Factories.BudgetViewModelFactory.Interfaces;
+using Factories.BudgetViewModelFactory;
+using Repositories.CategoryRepository.Interfaces;
+using Repositories.CategoryRepository;
+using Factories.CategoryFactory.Interfaces;
+using Factories.CategoryFactory;
+using Finders.CategoryFinder.Interfaces;
+using Finders.CategoryFinder;
+using Finders.BudgetFinder.Interfaces;
+using Finders.BudgetFinder;
 
 var builder = WebApplication.CreateBuilder(args);
 

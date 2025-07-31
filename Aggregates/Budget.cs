@@ -1,6 +1,6 @@
-using Server.Events.Budget;
+using Events.Budget;
 
-namespace Server.Aggregates;
+namespace Aggregates;
 
 public class Budget
 {
