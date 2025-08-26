@@ -1,4 +1,4 @@
-namespace Server.Events;
+namespace Budget.Events;
 
 public class EventEntity
 {

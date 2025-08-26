@@ -1,4 +1,4 @@
-namespace Server.Events.Category;
+namespace Budget.Events.Category;
 public class CategoryEventEntity : EventEntity
 {
 	public Guid CategoryId { get; set; }

@@ -1,5 +1,5 @@
 
-namespace Server.Events.Budget;
+namespace Budget.Events.Budget;
 
 public class CreatedBudget : BudgetEventEntity
 {

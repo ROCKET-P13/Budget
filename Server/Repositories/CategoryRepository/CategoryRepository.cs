@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Aggregates;
-using Server.Data;
-using Server.Data.Interfaces;
-using Server.DTOs.Projection;
-using Server.Repositories.CategoryRepository.Interfaces;
+using Budget.Aggregates;
+using Budget.Data;
+using Budget.Data.Interfaces;
+using Budget.DTOs.Projection;
+using Budget.Repositories.CategoryRepository.Interfaces;
 
-namespace Server.Repositories.CategoryRepository;
+namespace Budget.Repositories.CategoryRepository;
 
 public class CategoryRepository(IEventStore eventStore, AppDatabaseContext databaseContext) : ICategoryRepository
 {

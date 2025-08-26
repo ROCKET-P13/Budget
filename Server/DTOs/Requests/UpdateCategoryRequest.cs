@@ -1,4 +1,4 @@
-namespace Server.DTOs.Requests;
+namespace Budget.DTOs.Requests;
 
 public class UpdateCategoryRequest
 {

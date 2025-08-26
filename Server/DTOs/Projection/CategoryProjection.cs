@@ -1,4 +1,4 @@
-namespace Server.DTOs.Projection;
+namespace Budget.DTOs.Projection;
 
 public class CategoryProjection
 {

@@ -1,4 +1,4 @@
-namespace Server.Events.Budget;
+namespace Budget.Events.Budget;
 
 public class UpdatedTransaction : BudgetEventEntity
 {

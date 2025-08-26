@@ -1,6 +1,6 @@
-using Server.Aggregates;
+using Budget.Aggregates;
 
-namespace Server.Factories.BudgetFactory.Interfaces;
+namespace Budget.Factories.BudgetFactory.Interfaces;
 
 public interface IBudgetFactory
 {

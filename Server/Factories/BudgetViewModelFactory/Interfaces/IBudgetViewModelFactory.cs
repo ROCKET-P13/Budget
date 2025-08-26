@@ -1,7 +1,7 @@
-using Server.Aggregates;
-using Server.DTOs.ViewModel;
+using Budget.Aggregates;
+using Budget.DTOs.ViewModel;
 
-namespace Server.Factories.BudgetViewModelFactory.Interfaces;
+namespace Budget.Factories.BudgetViewModelFactory.Interfaces;
 
 public interface IBudgetViewModelFactory
 {

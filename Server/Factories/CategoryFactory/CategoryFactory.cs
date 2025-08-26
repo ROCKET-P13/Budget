@@ -1,8 +1,8 @@
-using Server.Aggregates;
-using Server.Events.Category;
-using Server.Factories.CategoryFactory.Interfaces;
+using Budget.Aggregates;
+using Budget.Events.Category;
+using Budget.Factories.CategoryFactory.Interfaces;
 
-namespace Server.Factories.CategoryFactory;
+namespace Budget.Factories.CategoryFactory;
 
 public class CategoryFactory : ICategoryFactory
 {

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Server.Data;
+using Budget.Data;
 
 #nullable disable
 
-namespace Server.Migrations
+namespace Budget.Migrations
 {
     [DbContext(typeof(AppDatabaseContext))]
     partial class AppDatabaseContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace Server.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Server.DTOs.Projection.BudgetProjection", b =>
+            modelBuilder.Entity("Budget.DTOs.Projection.BudgetProjection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace Server.Migrations
                     b.ToTable("BudgetProjection", (string)null);
                 });
 
-            modelBuilder.Entity("Server.DTOs.Projection.CategoryProjection", b =>
+            modelBuilder.Entity("Budget.DTOs.Projection.CategoryProjection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Server.Migrations
                     b.ToTable("CategoryProjection", (string)null);
                 });
 
-            modelBuilder.Entity("Server.Events.Budget.BudgetEvent", b =>
+            modelBuilder.Entity("Budget.Events.Budget.BudgetEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,7 +94,7 @@ namespace Server.Migrations
                     b.ToTable("BudgetEvent", (string)null);
                 });
 
-            modelBuilder.Entity("Server.Events.Category.CategoryEvent", b =>
+            modelBuilder.Entity("Budget.Events.Category.CategoryEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

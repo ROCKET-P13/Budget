@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using Server.DTOs.Requests;
-using Server.Factories.BudgetFactory.Interfaces;
-using Server.Factories.BudgetViewModelFactory.Interfaces;
-using Server.Finders.BudgetFinder.Interfaces;
-using Server.Repositories.BudgetRepository.Interfaces;
-using Server.Repositories.CategoryRepository.Interfaces;
+using Budget.DTOs.Requests;
+using Budget.Factories.BudgetFactory.Interfaces;
+using Budget.Factories.BudgetViewModelFactory.Interfaces;
+using Budget.Finders.BudgetFinder.Interfaces;
+using Budget.Repositories.BudgetRepository.Interfaces;
+using Budget.Repositories.CategoryRepository.Interfaces;
 
-namespace Server.Controllers;
+namespace Budget.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 

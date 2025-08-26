@@ -1,0 +1,11 @@
+# Build Results
+bin
+obj
+out
+
+# ASP.NET Core secrets
+appsettings.json
+
+# Entity Framework
+Migrations/*.Designer.cs
+Migrations/*.csproj

@@ -1,6 +1,6 @@
-using Server.Aggregates;
+using Budget.Aggregates;
 
-namespace Server.Repositories.CategoryRepository.Interfaces;
+namespace Budget.Repositories.CategoryRepository.Interfaces;
 public interface ICategoryRepository
 {
 	Task SaveAsync(Category category);

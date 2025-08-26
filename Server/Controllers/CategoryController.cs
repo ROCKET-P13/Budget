@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Server.DTOs.Requests;
-using Server.Factories.CategoryFactory.Interfaces;
-using Server.Finders.CategoryFinder.Interfaces;
-using Server.Repositories.CategoryRepository.Interfaces;
+using Budget.DTOs.Requests;
+using Budget.Factories.CategoryFactory.Interfaces;
+using Budget.Finders.CategoryFinder.Interfaces;
+using Budget.Repositories.CategoryRepository.Interfaces;
 
-namespace Server.Controllers;
+namespace Budget.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

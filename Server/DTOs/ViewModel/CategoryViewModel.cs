@@ -1,4 +1,4 @@
-namespace Server.DTOs.ViewModel;
+namespace Budget.DTOs.ViewModel;
 
 public class CategoryViewModel
 {

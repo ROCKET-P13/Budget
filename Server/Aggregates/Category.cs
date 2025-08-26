@@ -1,6 +1,6 @@
-using Server.Events.Category;
+using Budget.Events.Category;
 
-namespace Server.Aggregates;
+namespace Budget.Aggregates;
 
 public class Category
 {

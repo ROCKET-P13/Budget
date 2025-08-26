@@ -1,8 +1,8 @@
-using Server.Events;
-using Server.Events.Budget;
-using Server.Events.Category;
+using Budget.Events;
+using Budget.Events.Budget;
+using Budget.Events.Category;
 
-namespace Server.Data.Interfaces;
+namespace Budget.Data.Interfaces;
 
 public interface IEventStore
 {

@@ -1,4 +1,4 @@
-namespace Server.Events.Category;
+namespace Budget.Events.Category;
 
 public class CategoryEvent : Event
 {
