@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { BudgetApiInfrastructureStack } from '../lib/budget_api_infrastructure-stack';
+import { BudgetAPIInfrastructureStack } from '../lib/budget_api_infrastructure-stack';
 
 const app = new cdk.App();
-new BudgetApiInfrastructureStack(app, 'BudgetApiInfrastructureStack', {
+new BudgetAPIInfrastructureStack(app, 'BudgetAPIInfrastructureStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
